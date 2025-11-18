@@ -1,11 +1,12 @@
 <?php
-// config.php - Database Configuration untuk Galeri Art
+// config.php - Database Configuration untuk Galeri Art (Railway Compatible)
 
-// Ganti bagian database config dengan:
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_USERNAME', getenv('DB_USERNAME') ?: 'root');
-define('DB_PASSWORD', getenv('DB_PASSWORD') ?: '');
-define('DB_NAME', getenv('DB_NAME') ?: 'galeri_art');
+// Database configuration - Railway Environment Variables
+define('DB_HOST', getenv('MYSQLHOST') ?: getenv('DB_HOST') ?: 'localhost');
+define('DB_USERNAME', getenv('MYSQLUSER') ?: getenv('DB_USERNAME') ?: 'root');
+define('DB_PASSWORD', getenv('MYSQLPASSWORD') ?: getenv('DB_PASSWORD') ?: '');
+define('DB_NAME', getenv('MYSQLDATABASE') ?: getenv('DB_NAME') ?: 'galeri_art');
+define('DB_PORT', getenv('MYSQLPORT') ?: getenv('DB_PORT') ?: '3306');
 
 // Start session untuk authentication
 session_start();
@@ -14,7 +15,7 @@ session_start();
 function getConnection() {
     try {
         $pdo = new PDO(
-            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+            "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4",
             DB_USERNAME,
             DB_PASSWORD,
             [
@@ -25,7 +26,9 @@ function getConnection() {
         );
         return $pdo;
     } catch (PDOException $e) {
-        die("Database connection failed: " . $e->getMessage());
+        // Log error untuk debugging di Railway
+        error_log("Database connection failed: " . $e->getMessage());
+        die("Database connection failed. Please check your configuration.");
     }
 }
 
