@@ -7,12 +7,14 @@ $user = getCurrentUser();
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galeri Art</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Header -->
     <header>
@@ -24,7 +26,8 @@ $user = getCurrentUser();
                     <li><a href="galeri.php">Galeri</a></li>
                     <li><a href="about.php">About</a></li>
                     <li class="user-dropdown">
-                        <a href="#" class="user-name"><?php echo htmlspecialchars($user['nama']); ?> <span class="dropdown-arrow">▼</span></a>
+                        <a href="#" class="user-name"><?php echo htmlspecialchars($user['nama']); ?> <span
+                                class="dropdown-arrow">▼</span></a>
                         <div class="dropdown-menu">
                             <a href="profile.php">Profile</a>
                             <?php if ($user['role'] === 'seniman'): ?>
@@ -49,31 +52,31 @@ $user = getCurrentUser();
 
     <!-- Age Verification Modal -->
     <?php if (!isLoggedIn() && !isAgeVerified()): ?>
-    <div id="ageVerificationModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3>🔞 Verifikasi Usia</h3>
-            <p>Untuk mengakses konten galeri, mohon konfirmasi kategori usia Anda:</p>
-            <div class="age-buttons">
-                <button onclick="setAgeCategory('under_17')" class="age-btn under-17">
-                    Di bawah 17 tahun
-                </button>
-                <button onclick="setAgeCategory('17_plus')" class="age-btn over-17">
-                    17 tahun ke atas
-                </button>
+        <div id="ageVerificationModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>🔞 Verifikasi Usia</h3>
+                <p>Untuk mengakses konten galeri, mohon konfirmasi kategori usia Anda:</p>
+                <div class="age-buttons">
+                    <button onclick="setAgeCategory('under_17')" class="age-btn under-17">
+                        Di bawah 17 tahun
+                    </button>
+                    <button onclick="setAgeCategory('17_plus')" class="age-btn over-17">
+                        17 tahun ke atas
+                    </button>
+                </div>
+                <p class="age-note">Informasi ini akan digunakan untuk menampilkan konten yang sesuai dengan usia Anda.</p>
             </div>
-            <p class="age-note">Informasi ini akan digunakan untuk menampilkan konten yang sesuai dengan usia Anda.</p>
         </div>
-    </div>
     <?php endif; ?>
 
     <!-- Logout Success Message -->
     <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success'): ?>
-    <div class="success-message">
-        <div class="message-content">
-            <span class="message-icon">✅</span>
-            <span class="message-text">Anda telah berhasil logout. Terima kasih telah mengunjungi Galeri Art!</span>
+        <div class="success-message">
+            <div class="message-content">
+                <span class="message-icon">✅</span>
+                <span class="message-text">Anda telah berhasil logout. Terima kasih telah mengunjungi Galeri Art!</span>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 
     <!-- Hero Section -->
@@ -89,30 +92,30 @@ $user = getCurrentUser();
 
     <script>
         // JavaScript untuk dropdown functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const userDropdown = document.querySelector('.user-dropdown');
-            
+
             if (userDropdown) {
                 const userNameLink = userDropdown.querySelector('.user-name');
                 const dropdownMenu = userDropdown.querySelector('.dropdown-menu');
-                
+
                 // Toggle dropdown
-                userNameLink.addEventListener('click', function(e) {
+                userNameLink.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     dropdownMenu.classList.toggle('show');
                 });
-                
+
                 // Close dropdown when clicking outside
-                document.addEventListener('click', function(e) {
+                document.addEventListener('click', function (e) {
                     if (!userDropdown.contains(e.target)) {
                         dropdownMenu.classList.remove('show');
                     }
                 });
-                
+
                 // Close dropdown when clicking menu items
-                dropdownMenu.querySelectorAll('a').forEach(function(link) {
-                    link.addEventListener('click', function() {
+                dropdownMenu.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
                         dropdownMenu.classList.remove('show');
                     });
                 });
@@ -129,24 +132,24 @@ $user = getCurrentUser();
                 },
                 body: 'age_category=' + encodeURIComponent(category)
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Hide modal
-                    const modal = document.getElementById('ageVerificationModal');
-                    if (modal) {
-                        modal.style.display = 'none';
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hide modal
+                        const modal = document.getElementById('ageVerificationModal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                        }
+                        // Reload page to apply age filtering
+                        window.location.reload();
+                    } else {
+                        alert('Terjadi kesalahan. Silakan coba lagi.');
                     }
-                    // Reload page to apply age filtering
-                    window.location.reload();
-                } else {
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     alert('Terjadi kesalahan. Silakan coba lagi.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan. Silakan coba lagi.');
-            });
+                });
         }
 
         // Auto-hide success message
@@ -162,4 +165,5 @@ $user = getCurrentUser();
         }
     </script>
 </body>
+
 </html>
